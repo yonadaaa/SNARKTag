@@ -6,8 +6,8 @@ include "../../../node_modules/circomlib/circuits/gates.circom";
 
 template Step(UNITS, D, DECAY, WIDTH) {
     signal input position_in[UNITS][D];     // The current position of each unit
-    signal input vector_in[UNITS][D];       // The speed of each unit
-    signal input speed_in[UNITS];           // The direction vector for each unit
+    signal input vector_in[UNITS][D];       // The direction vector for each unit
+    signal input speed_in[UNITS];           // The speed of each unit
     signal input it_in;                     // Who is currently "it"
     signal output position_out[UNITS][D];
     signal output vector_out[UNITS][D];
@@ -119,12 +119,3 @@ template Step(UNITS, D, DECAY, WIDTH) {
 
     it_out <== muxIt[UNITS-1][UNITS-1].out;
 }
-
-// Tag thoughts
-        // If collisions[i][j] is true, and i==it, then it = j.
-        // Here, you move if you are not colliding with someone.
-        // Now, we want to check all the players and see who is colliding.
-
-
-            // If order collision, AND `it`=j, then `itAccum[i][j] = j
-            // `it` <== itaAccum[N-1][N-1]
