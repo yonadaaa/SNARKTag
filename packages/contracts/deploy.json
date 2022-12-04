@@ -1,0 +1,53 @@
+{
+  "components": [
+    "ListComponent",
+    "PositionComponent",
+    "SpeedComponent",
+    "VectorComponent",
+    "IndexComponent",
+    "ItComponent",
+    "OwnerComponent",
+    "CreatedComponent",
+    "RateComponent",
+    "StartComponent"
+  ],
+  "systems": [
+    {
+      "name": "ComponentDevSystem",
+      "writeAccess": [
+        "*"
+      ]
+    },
+    {
+      "name": "BulletinSystem",
+      "writeAccess": [
+        "ListComponent"
+      ]
+    },
+    {
+      "name": "CreateSystem",
+      "writeAccess": [
+        "CreatedComponent",
+        "RateComponent",
+        "StartComponent",
+        "PositionComponent",
+        "SpeedComponent",
+        "VectorComponent",
+        "IndexComponent",
+        "ItComponent",
+        "OwnerComponent"
+      ]
+    },
+    {
+      "name": "ClientSystem",
+      "writeAccess": [
+        "PositionComponent",
+        "StartComponent"
+      ]
+    },
+    {
+      "name": "VectorSystem",
+      "writeAccess": []
+    }
+  ]
+}
