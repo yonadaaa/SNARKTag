@@ -1,6 +1,6 @@
 pragma circom 2.1.2;
 
-include "./lessThanConstant.circom";
+include "../../../node_modules/circomlib/circuits/bitify.circom";
 include "../../../node_modules/circomlib/circuits/mux1.circom";
 include "../../../node_modules/circomlib/circuits/gates.circom";
 
@@ -23,6 +23,9 @@ template Step(UNITS, D, DECAY, WIDTH) {
     signal vectorAccum[UNITS][UNITS][D];
 
     component mux[UNITS];
+    component bits[UNITS][UNITS][D];
+    component compPositive[UNITS][UNITS][D];
+    component compNegative[UNITS][UNITS][D];
     component isEqual[UNITS][UNITS];
     component muxVector[UNITS][UNITS];
     component muxSpeed[UNITS][UNITS];
@@ -30,12 +33,12 @@ template Step(UNITS, D, DECAY, WIDTH) {
     component multiAND[UNITS][UNITS];
     component isCollision[UNITS][UNITS][D];
 
-    var WIDTHS[UNITS];
+    var HALF_WIDTHS[UNITS];
     var MULTIPLIER[UNITS];
 
     // Movement phase
     for (var i=0; i < UNITS; i++) {
-        WIDTHS[i] = ((i+2) * WIDTH) / 3;
+        HALF_WIDTHS[i] = ((i+2) * WIDTH) / 3;
         MULTIPLIER[i] = UNITS - i;
 
         var unitSpeed = speed_in[i] * MULTIPLIER[i];
@@ -56,15 +59,22 @@ template Step(UNITS, D, DECAY, WIDTH) {
             if (i < j) {
                 multiAND[i][j] = MultiAND(D);
                 
-                var TEST = WIDTHS[i] + WIDTHS[j];
+                var MAX_DISTANCE = HALF_WIDTHS[i] + HALF_WIDTHS[j];
 
                 for (var k=0; k < D; k++) {
-                    var lessThan1 = LessThanConstant(TEST)(potPositions[i][k] - potPositions[j][k]);
-                    var lessThan2 = LessThanConstant(TEST)(potPositions[j][k] - potPositions[i][k]);
+                    // This difference can be postive or negative, so check both options
+                    bits[i][j][k] = Num2Bits(254);
+                    bits[i][j][k].in <== potPositions[i][k] - potPositions[j][k];
+
+                    compPositive[i][j][k] = CompConstant(MAX_DISTANCE);
+                    compPositive[i][j][k].in <== bits[i][j][k].out;
+
+                    compNegative[i][j][k] = CompConstant(-MAX_DISTANCE);
+                    compNegative[i][j][k].in <== bits[i][j][k].out;
 
                     isCollision[i][j][k] = OR();
-                    isCollision[i][j][k].a <== lessThan1;
-                    isCollision[i][j][k].b <== lessThan2;
+                    isCollision[i][j][k].a <== NOT()(compPositive[i][j][k].out);
+                    isCollision[i][j][k].b <== compNegative[i][j][k].out;
 
                     multiAND[i][j].in[k] <== isCollision[i][j][k].out;
                 }
