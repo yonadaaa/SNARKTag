@@ -53,14 +53,14 @@ template Step(UNITS, D, DECAY, WIDTH) {
         }
     }
 
-    // Collision phase
     for (var i=0; i < UNITS; i++) {
+        // Collision detection phase
         for (var j=0; j < UNITS; j++) {
             if (i < j) {
                 multiAND[i][j] = MultiAND(D);
                 
                 var MAX_DISTANCE = HALF_WIDTHS[i] + HALF_WIDTHS[j];
-
+                
                 for (var k=0; k < D; k++) {
                     // This difference can be postive or negative, so check both options
                     bits[i][j][k] = Num2Bits(254);
@@ -85,6 +85,7 @@ template Step(UNITS, D, DECAY, WIDTH) {
             }
         }
 
+        // Collision resolution phase
         for (var j=0; j < UNITS; j++) {
             var isColliding = i < j ? collisions[i][j] : collisions[j][i];
 
