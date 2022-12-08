@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getComponentValue, removeComponent, setComponent } from "@latticexyz/recs";
+import {
+  getComponentValue,
+  removeComponent,
+  setComponent,
+} from "@latticexyz/recs";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Time } from "./utils/time";
@@ -38,10 +42,14 @@ async function bootGame() {
     const checkpointUrl = params.get("checkpoint") || undefined;
     const devMode = params.get("dev") === "true";
     const initialBlockNumberString = params.get("initialBlockNumber");
-    const initialBlockNumber = initialBlockNumberString ? parseInt(initialBlockNumberString) : 0;
+    const initialBlockNumber = initialBlockNumberString
+      ? parseInt(initialBlockNumberString)
+      : 0;
 
     if (!privateKey) {
-      privateKey = localStorage.getItem("burnerWallet") || Wallet.createRandom().privateKey;
+      privateKey =
+        localStorage.getItem("burnerWallet") ||
+        Wallet.createRandom().privateKey;
       localStorage.setItem("burnerWallet", privateKey);
     }
 
@@ -61,7 +69,8 @@ async function bootGame() {
 
     if (!networkLayerConfig) throw new Error("Invalid config");
 
-    if (!layers.network) layers.network = await createNetworkLayer(networkLayerConfig);
+    if (!layers.network)
+      layers.network = await createNetworkLayer(networkLayerConfig);
     if (!layers.phaser) layers.phaser = await createPhaserLayer(layers.network);
 
     // Sync global time with phaser clock
@@ -139,8 +148,12 @@ async function bootGame() {
   return { layers, ecs };
 }
 
-const mountReact: { current: (mount: boolean) => void } = { current: () => void 0 };
-const setLayers: { current: (layers: Layers) => void } = { current: () => void 0 };
+const mountReact: { current: (mount: boolean) => void } = {
+  current: () => void 0,
+};
+const setLayers: { current: (layers: Layers) => void } = {
+  current: () => void 0,
+};
 
 function bootReact() {
   const rootElement = document.getElementById("react-root");
@@ -157,18 +170,24 @@ function bootReact() {
 
   if (import.meta.hot) {
     // HMR React engine
-    import.meta.hot.accept("./layers/Renderer/React/engine/Engine.tsx", async (module) => {
-      Engine = module.Engine;
-      renderEngine();
-    });
+    import.meta.hot.accept(
+      "./layers/Renderer/React/engine/Engine.tsx",
+      async (module) => {
+        Engine = module.Engine;
+        renderEngine();
+      }
+    );
   }
 
   if (import.meta.hot) {
     // HMR React components
-    import.meta.hot.accept("./layers/Renderer/React/components/index.ts", async (module) => {
-      registerUIComponents = module.registerUIComponents;
-      registerUIComponents();
-    });
+    import.meta.hot.accept(
+      "./layers/Renderer/React/components/index.ts",
+      async (module) => {
+        registerUIComponents = module.registerUIComponents;
+        registerUIComponents();
+      }
+    );
   }
 }
 

@@ -21,7 +21,10 @@ interface bfsNode {
   visited: boolean;
 }
 
-function getVisitableNeighbor(currentPosition: WorldCoord, isUntraversable: (arg0: WorldCoord) => boolean) {
+function getVisitableNeighbor(
+  currentPosition: WorldCoord,
+  isUntraversable: (arg0: WorldCoord) => boolean
+) {
   const neighbors = [
     { x: currentPosition.x, y: currentPosition.y - 1 }, // Up
     { x: currentPosition.x + 1, y: currentPosition.y }, // Right
@@ -116,7 +119,8 @@ export function aStar(
       if (gScore <= maxDistance && (!beenVisited || gScore < neighbor.g)) {
         neighbor.visited = true;
         neighbor.parent = currentNode;
-        neighbor.h = neighbor.h || manhattan({ x: neighbor.x, y: neighbor.y }, to);
+        neighbor.h =
+          neighbor.h || manhattan({ x: neighbor.x, y: neighbor.y }, to);
         neighbor.g = gScore;
         neighbor.f = neighbor.g + neighbor.h;
 
@@ -193,16 +197,27 @@ export function BFS(
  * @param to Coordinate to go to (included in the path)
  * @returns Finds a path between the from and to coordinates, used in some cases when aStar fails
  */
-export function directionalPathfind(from: WorldCoord, to: WorldCoord): WorldCoord[] {
+export function directionalPathfind(
+  from: WorldCoord,
+  to: WorldCoord
+): WorldCoord[] {
   const path: WorldCoord[] = [];
   const directionX = from.x < to.x ? 1 : -1;
   const directionY = from.y < to.y ? 1 : -1;
 
-  for (let x = from.x + directionX; directionX * x <= directionX * to.x; x = x + directionX) {
+  for (
+    let x = from.x + directionX;
+    directionX * x <= directionX * to.x;
+    x = x + directionX
+  ) {
     path.push({ x, y: from.y });
   }
 
-  for (let y = from.y + directionY; directionY * y <= directionY * to.y; y = y + directionY) {
+  for (
+    let y = from.y + directionY;
+    directionY * y <= directionY * to.y;
+    y = y + directionY
+  ) {
     path.push({ x: to.x, y });
   }
 

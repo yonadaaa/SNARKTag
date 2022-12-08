@@ -9,7 +9,10 @@ type SnarkJs = {
       circuitWasmPath: string,
       circuitZKeyPath: string
     ): Promise<{ proof: ProofType; publicSignals: string[] }>;
-    exportSolidityCallData(proof: ProofType, publicSignals: string[]): Promise<string>;
+    exportSolidityCallData(
+      proof: ProofType,
+      publicSignals: string[]
+    ): Promise<string>;
   };
   wtns: {
     calculate(
@@ -23,7 +26,9 @@ type SnarkJs = {
   };
 };
 
-function createWitness<InputType extends Record<keyof InputType, string | string[]>>(circuitName: string) {
+function createWitness<
+  InputType extends Record<keyof InputType, string | string[]>
+>(circuitName: string) {
   const snarkjs = (window as unknown as { snarkjs: SnarkJs }).snarkjs;
 
   return async (input: InputType) => {
@@ -32,16 +37,28 @@ function createWitness<InputType extends Record<keyof InputType, string | string
     };
 
     const start = Date.now();
-    await snarkjs.wtns.calculate(input, `/circuits/${circuitName}/circuit.wasm`, wtns);
-    const w = (await snarkjs.wtns.exportJson(wtns)).slice(1).map((n) => n.toString());
+    await snarkjs.wtns.calculate(
+      input,
+      `/circuits/${circuitName}/circuit.wasm`,
+      wtns
+    );
+    const w = (await snarkjs.wtns.exportJson(wtns))
+      .slice(1)
+      .map((n) => n.toString());
 
-    console.log(`Witness generated for ${circuitName}, took ${(Date.now() - start) / 1000}s`);
+    console.log(
+      `Witness generated for ${circuitName}, took ${
+        (Date.now() - start) / 1000
+      }s`
+    );
 
     return w;
   };
 }
 
-function createProver<InputType extends Record<keyof InputType, string | string[]>>(circuitName: string) {
+function createProver<
+  InputType extends Record<keyof InputType, string | string[]>
+>(circuitName: string) {
   const snarkjs = (window as unknown as { snarkjs: SnarkJs }).snarkjs;
 
   return async (input: InputType) => {
@@ -51,11 +68,15 @@ function createProver<InputType extends Record<keyof InputType, string | string[
       `/circuits/${circuitName}/circuit.wasm`,
       `/circuits/${circuitName}/circuit_final.zkey`
     );
-    console.log(`Proof generated for ${circuitName}, took ${(Date.now() - start) / 1000}s`);
+    console.log(
+      `Proof generated for ${circuitName}, took ${(Date.now() - start) / 1000}s`
+    );
 
     // Adds an outer array to the params string returned from exportSolidityCallData, flattens the
     // parsed nested array structure, removes the public signal values from the end (unneeded)
-    const proofData: string[] = JSON.parse(`[${await snarkjs.groth16.exportSolidityCallData(proof, publicSignals)}]`)
+    const proofData: string[] = JSON.parse(
+      `[${await snarkjs.groth16.exportSolidityCallData(proof, publicSignals)}]`
+    )
       .flat(2)
       .slice(0, -publicSignals.length);
 
@@ -63,9 +84,16 @@ function createProver<InputType extends Record<keyof InputType, string | string[
   };
 }
 
-type TransitionProofInput = { position_in: Array<Array<string>>; vector_in: Array<Array<string>>, speed_in: Array<string>, it_in: string };
-export const transitionWitness = createWitness<TransitionProofInput>("transition");
-export const transitionsProver = createProver<TransitionProofInput>("transitions");
+type TransitionProofInput = {
+  position_in: Array<Array<string>>;
+  vector_in: Array<Array<string>>;
+  speed_in: Array<string>;
+  it_in: string;
+};
+export const transitionWitness =
+  createWitness<TransitionProofInput>("transition");
+export const transitionsProver =
+  createProver<TransitionProofInput>("transitions");
 
 type ValidateProofInput = { speed_in: string; vector_in: Array<string> };
 export const validateWitness = createWitness<ValidateProofInput>("validate");

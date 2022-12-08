@@ -1,4 +1,9 @@
-import { getComponentEntities, getComponentValue, getComponentValueStrict, setComponent } from "@latticexyz/recs";
+import {
+  getComponentEntities,
+  getComponentValue,
+  getComponentValueStrict,
+  setComponent,
+} from "@latticexyz/recs";
 import { NetworkLayer } from "../../network";
 import { PhaserLayer } from "../types";
 import { PRIME } from "./createUnitSystem";
@@ -58,8 +63,14 @@ export function createInputSystem(network: NetworkLayer, phaser: PhaserLayer) {
       if (unitVector) {
         const selecteds = getComponentEntities(phaser.components.Selected);
         for (const selected of selecteds) {
-          const selectedValue = getComponentValueStrict(phaser.components.Selected, selected);
-          const index = getComponentValueStrict(network.components.Index, selected);
+          const selectedValue = getComponentValueStrict(
+            phaser.components.Selected,
+            selected
+          );
+          const index = getComponentValueStrict(
+            network.components.Index,
+            selected
+          );
           if (selectedValue.value) {
             network.api.move(index.value, unitVector);
           }

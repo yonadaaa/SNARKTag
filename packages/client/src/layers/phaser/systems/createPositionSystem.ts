@@ -1,8 +1,15 @@
-import { defineComponentSystem, getComponentValue, setComponent } from "@latticexyz/recs";
+import {
+  defineComponentSystem,
+  getComponentValue,
+  setComponent,
+} from "@latticexyz/recs";
 import { NetworkLayer } from "../../network";
 import { PhaserLayer } from "../types";
 
-export function createPositionSystem(network: NetworkLayer, phaser: PhaserLayer) {
+export function createPositionSystem(
+  network: NetworkLayer,
+  phaser: PhaserLayer
+) {
   const {
     world,
     components: { Position: Position },

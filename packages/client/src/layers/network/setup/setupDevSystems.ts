@@ -1,15 +1,27 @@
 import { TxQueue } from "@latticexyz/network";
-import { Component, ComponentValue, defineComponent, EntityIndex, Schema, Type, World } from "@latticexyz/recs";
+import {
+  Component,
+  ComponentValue,
+  defineComponent,
+  EntityIndex,
+  Schema,
+  Type,
+  World,
+} from "@latticexyz/recs";
 import { keccak256 } from "@latticexyz/utils";
 import { BigNumber } from "ethers";
 import { SystemTypes } from "contracts/types/SystemTypes";
 
 export function setupDevSystems(
   world: World,
-  encodersPromise: Promise<Record<string, (value: { [key: string]: unknown }) => string>>,
+  encodersPromise: Promise<
+    Record<string, (value: { [key: string]: unknown }) => string>
+  >,
   systems: TxQueue<SystemTypes>
 ) {
-  const DevHighlightComponent = defineComponent(world, { value: Type.OptionalNumber });
+  const DevHighlightComponent = defineComponent(world, {
+    value: Type.OptionalNumber,
+  });
 
   const HoverHighlightComponent = defineComponent(world, {
     x: Type.OptionalNumber,
@@ -28,7 +40,9 @@ export function setupDevSystems(
     const encoders = await encodersPromise;
     const data = encoders[keccak256(component.metadata.contractId)](newValue);
     const entityId = world.entities[entity];
-    console.log(`Sent transaction to edit networked Component ${component.id} for Entity ${entityId}`);
+    console.log(
+      `Sent transaction to edit networked Component ${component.id} for Entity ${entityId}`
+    );
     await systems["mudwar.system.ComponentDev"].executeTyped(
       keccak256(component.metadata.contractId),
       BigNumber.from(entityId),
@@ -36,5 +50,9 @@ export function setupDevSystems(
     );
   }
 
-  return { setContractComponentValue, DevHighlightComponent, HoverHighlightComponent };
+  return {
+    setContractComponentValue,
+    DevHighlightComponent,
+    HoverHighlightComponent,
+  };
 }

@@ -5,7 +5,14 @@ import {
   defineMapConfig,
   defineCameraConfig,
 } from "@latticexyz/phaserx";
-import { Sprites, Assets, Maps, Scenes, TILE_HEIGHT, TILE_WIDTH } from "./constants";
+import {
+  Sprites,
+  Assets,
+  Maps,
+  Scenes,
+  TILE_HEIGHT,
+  TILE_WIDTH,
+} from "./constants";
 import {
   Tileset as OverworldTileset,
   TileAnimations as OverworldTileAnimations,
@@ -18,8 +25,16 @@ export const phaserConfig = {
   sceneConfig: {
     [Scenes.Main]: defineSceneConfig({
       assets: {
-        [Assets.OverworldTileset]: { type: AssetType.Image, key: Assets.OverworldTileset, path: overworldTileset },
-        [Assets.MountainTileset]: { type: AssetType.Image, key: Assets.MountainTileset, path: mountainTileset },
+        [Assets.OverworldTileset]: {
+          type: AssetType.Image,
+          key: Assets.OverworldTileset,
+          path: overworldTileset,
+        },
+        [Assets.MountainTileset]: {
+          type: AssetType.Image,
+          key: Assets.MountainTileset,
+          path: mountainTileset,
+        },
         [Assets.MainAtlas]: {
           type: AssetType.MultiAtlas,
           key: Assets.MainAtlas,
@@ -82,7 +97,11 @@ export const phaserConfig = {
       },
       animations: [],
       tilesets: {
-        Default: { assetKey: Assets.OverworldTileset, tileWidth: TILE_WIDTH, tileHeight: TILE_HEIGHT },
+        Default: {
+          assetKey: Assets.OverworldTileset,
+          tileWidth: TILE_WIDTH,
+          tileHeight: TILE_HEIGHT,
+        },
       },
     }),
   },

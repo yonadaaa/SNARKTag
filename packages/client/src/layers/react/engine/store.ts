@@ -14,6 +14,10 @@ export const registerUIComponent = action(
     requirement: (layers: Layers) => Observable<T>,
     Render: React.FC<NonNullable<T>>
   ) => {
-    EngineStore.UIComponents.set(id, { requirement, Render: Render as React.FC, gridConfig });
+    EngineStore.UIComponents.set(id, {
+      requirement,
+      Render: Render as React.FC,
+      gridConfig,
+    });
   }
 );

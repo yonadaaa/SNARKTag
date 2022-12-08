@@ -1,4 +1,10 @@
-import { Component, Schema, ComponentValue, componentValueEquals, EntityIndex } from "@latticexyz/recs";
+import {
+  Component,
+  Schema,
+  ComponentValue,
+  componentValueEquals,
+  EntityIndex,
+} from "@latticexyz/recs";
 import { deferred } from "@latticexyz/utils";
 import { filter } from "rxjs";
 
@@ -12,7 +18,13 @@ export function waitForComponentValueIn<S extends Schema>(
   let dispose = resolve;
   const subscription = component.update$
     .pipe(
-      filter((e) => e.entity === entity && Boolean(values.find((value) => componentValueEquals(value, e.value[0]))))
+      filter(
+        (e) =>
+          e.entity === entity &&
+          Boolean(
+            values.find((value) => componentValueEquals(value, e.value[0]))
+          )
+      )
     )
     .subscribe(() => {
       resolve();

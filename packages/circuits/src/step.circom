@@ -4,7 +4,7 @@ include "../../../node_modules/circomlib/circuits/bitify.circom";
 include "../../../node_modules/circomlib/circuits/mux1.circom";
 include "../../../node_modules/circomlib/circuits/gates.circom";
 
-template Step(UNITS, D, DECAY, WIDTH) {
+template Step(UNITS, D, DECAY, BASE_HALF_WIDTH) {
     signal input position_in[UNITS][D];     // The current position of each unit
     signal input vector_in[UNITS][D];       // The direction vector for each unit
     signal input speed_in[UNITS];           // The speed of each unit
@@ -38,7 +38,7 @@ template Step(UNITS, D, DECAY, WIDTH) {
 
     // Movement phase
     for (var i=0; i < UNITS; i++) {
-        HALF_WIDTHS[i] = ((i+2) * WIDTH) / 3;
+        HALF_WIDTHS[i] = ((i+2) * BASE_HALF_WIDTH) / 3;
         MULTIPLIER[i] = UNITS - i;
 
         var unitSpeed = speed_in[i] * MULTIPLIER[i];

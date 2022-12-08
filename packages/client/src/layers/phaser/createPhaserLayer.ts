@@ -2,8 +2,12 @@ import { namespaceWorld } from "@latticexyz/recs";
 import { createPhaserEngine } from "@latticexyz/phaserx";
 import { phaserConfig } from "./config";
 import { NetworkLayer } from "../network";
-import { createListSystem, createInputSystem } from "./systems";
-import { defineBoolComponent, defineNumberComponent, defineStringComponent } from "@latticexyz/std-client";
+import { createInputSystem } from "./systems";
+import {
+  defineBoolComponent,
+  defineNumberComponent,
+  defineStringComponent,
+} from "@latticexyz/std-client";
 import { createUnitSystem } from "./systems/createUnitSystem";
 import { createPositionSystem } from "./systems/createPositionSystem";
 import { createRateSystem } from "./systems/createRateSystem";
@@ -26,10 +30,15 @@ export async function createPhaserLayer(network: NetworkLayer) {
     Vector: defineFieldCoordComponent(world, { id: "Vector" }),
     Selected: defineBoolComponent(world, { id: "Selected" }),
     ItClient: defineBoolComponent(world, { id: "ItClient" }),
+    Highest: defineNumberComponent(world, { id: "Highest" }),
   };
 
   // --- PHASER ENGINE SETUP --------------------------------------------------------
-  const { game, scenes, dispose: disposePhaser } = await createPhaserEngine(phaserConfig);
+  const {
+    game,
+    scenes,
+    dispose: disposePhaser,
+  } = await createPhaserEngine(phaserConfig);
   world.registerDisposer(disposePhaser);
 
   // --- LAYER CONTEXT --------------------------------------------------------------
@@ -46,7 +55,6 @@ export async function createPhaserLayer(network: NetworkLayer) {
   createSpeedSystem(network, context);
   createPositionSystem(network, context);
   createDirectionSystem(network, context);
-  createListSystem(network, context);
   createItSystem(network, context);
   createUnitSystem(network, context);
   createInputSystem(network, context);

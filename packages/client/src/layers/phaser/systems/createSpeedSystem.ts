@@ -1,4 +1,4 @@
-import { defineComponentSystem, getComponentValue, setComponent } from "@latticexyz/recs";
+import { defineComponentSystem, setComponent } from "@latticexyz/recs";
 import { NetworkLayer } from "../../network";
 import { PhaserLayer } from "../types";
 

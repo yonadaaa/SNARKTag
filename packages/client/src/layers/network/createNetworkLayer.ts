@@ -1,4 +1,10 @@
-import { createWorld, EntityID, EntityIndex, getComponentEntities, getComponentValueStrict } from "@latticexyz/recs";
+import {
+  createWorld,
+  EntityID,
+  EntityIndex,
+  getComponentEntities,
+  getComponentValueStrict,
+} from "@latticexyz/recs";
 import { setupDevSystems } from "./setup";
 import {
   createActionSystem,
@@ -18,7 +24,6 @@ import { defineFieldCoordComponent } from "./components/FieldCoordComponent";
 import { defineListComponent } from "./components/ListComponent";
 
 const UNITS = 3;
-const STEPS = 10;
 
 /**
  * The Network layer is the lowest layer in the client architecture.
@@ -33,23 +38,56 @@ export async function createNetworkLayer(config: GameConfig) {
   // --- COMPONENTS -----------------------------------------------------------------
   const components = {
     LoadingState: defineLoadingStateComponent(world),
-    List: defineListComponent(world, { id: "List", metadata: { contractId: "component.List" } }),
-    Index: defineNumberComponent(world, { id: "Index", metadata: { contractId: "component.Index" } }),
-    It: defineBoolComponent(world, { id: "It", metadata: { contractId: "component.It" } }),
-    Owner: defineStringComponent(world, { id: "Owner", metadata: { contractId: "component.Owner" } }),
-    Position: defineFieldCoordComponent(world, { id: "Position", metadata: { contractId: "component.Position" } }),
-    Pace: defineStringComponent(world, { id: "Pace", metadata: { contractId: "component.Speed" } }),
-    Direction: defineFieldCoordComponent(world, { id: "Direction", metadata: { contractId: "component.Vector" } }),
-    Created: defineBoolComponent(world, { id: "Created", metadata: { contractId: "component.Created" } }),
-    Rate: defineNumberComponent(world, { id: "Rate", metadata: { contractId: "component.Rate" } }),
-    Start: defineNumberComponent(world, { id: "Start", metadata: { contractId: "component.Start" } }),
+    List: defineListComponent(world, {
+      id: "List",
+      metadata: { contractId: "component.List" },
+    }),
+    Index: defineNumberComponent(world, {
+      id: "Index",
+      metadata: { contractId: "component.Index" },
+    }),
+    It: defineBoolComponent(world, {
+      id: "It",
+      metadata: { contractId: "component.It" },
+    }),
+    Owner: defineStringComponent(world, {
+      id: "Owner",
+      metadata: { contractId: "component.Owner" },
+    }),
+    Position: defineFieldCoordComponent(world, {
+      id: "Position",
+      metadata: { contractId: "component.Position" },
+    }),
+    Pace: defineStringComponent(world, {
+      id: "Pace",
+      metadata: { contractId: "component.Speed" },
+    }),
+    Direction: defineFieldCoordComponent(world, {
+      id: "Direction",
+      metadata: { contractId: "component.Vector" },
+    }),
+    Created: defineBoolComponent(world, {
+      id: "Created",
+      metadata: { contractId: "component.Created" },
+    }),
+    Rate: defineNumberComponent(world, {
+      id: "Rate",
+      metadata: { contractId: "component.Rate" },
+    }),
+    Start: defineNumberComponent(world, {
+      id: "Start",
+      metadata: { contractId: "component.Start" },
+    }),
   };
 
   // --- SETUP ----------------------------------------------------------------------
-  const { txQueue, systems, txReduced$, network, startSync, encoders } = await setupMUDNetwork<
-    typeof components,
-    SystemTypes
-  >(getNetworkConfig(config), world, components, SystemAbis);
+  const { txQueue, systems, txReduced$, network, startSync, encoders } =
+    await setupMUDNetwork<typeof components, SystemTypes>(
+      getNetworkConfig(config),
+      world,
+      components,
+      SystemAbis
+    );
 
   // --- ACTION SYSTEM --------------------------------------------------------------
   const actions = createActionSystem(world, txReduced$);
@@ -70,7 +108,12 @@ export async function createNetworkLayer(config: GameConfig) {
     }
     const vector_in = Array(UNITS).fill([HYPOTENUSE.toString(), 0]);
 
-    const input = { position_in, vector_in, speed_in: ['0','0','0'], it_in:'0'};
+    const input = {
+      position_in,
+      vector_in,
+      speed_in: ["0", "0", "0"],
+      it_in: "0",
+    };
 
     const { proofData, publicSignals } = await transitionsProver(input);
 

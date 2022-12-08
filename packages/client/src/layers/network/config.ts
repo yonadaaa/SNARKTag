@@ -11,7 +11,9 @@ export type GameConfig = {
   initialBlockNumber: number;
 };
 
-export const getNetworkConfig: (networkConfig: GameConfig) => SetupContractConfig = (config) => ({
+export const getNetworkConfig: (
+  networkConfig: GameConfig
+) => SetupContractConfig = (config) => ({
   clock: {
     period: 1000,
     initialTime: 0,
