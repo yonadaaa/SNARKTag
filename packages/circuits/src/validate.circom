@@ -1,7 +1,5 @@
 pragma circom 2.1.2;
 
-include "./move.circom";
-
 // Checks that a given vector corresponds to a Pythagorean (n)tuple
 template Validate(D, HYPOTENUSE) {
     signal input speed_in;
@@ -13,6 +11,7 @@ template Validate(D, HYPOTENUSE) {
     }
 
     sum[D-1] === HYPOTENUSE * HYPOTENUSE;
+    
     signal output speed_out <== 200000000000000000000000000000000000000000000000000000000000000000000000;
     signal output vector_out[D] <== vector_in;
 }
