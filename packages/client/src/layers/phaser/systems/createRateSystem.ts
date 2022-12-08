@@ -35,34 +35,30 @@ export function createRateSystem(network: NetworkLayer, phaser: PhaserLayer) {
         }
 
         if (highest && list) {
-          for (let i = 0; i < list.addresses.length; i++) {
-            if (i > highest.value) {
-              setComponent(phaser.components.Highest, entity, { value: i });
+          for (let i = highest.value; i < list.addresses.length; i++) {
+            const vector = {
+              x: list.xs[i].toString(),
+              y: list.ys[i].toString(),
+            };
 
-              const vector = {
-                x: list.xs[i].toString(),
-                y: list.ys[i].toString(),
-              };
+            const speedValue = getComponentValueStrict(
+              phaser.components.Speed,
+              entity
+            );
 
-              const speedValue = getComponentValueStrict(
-                phaser.components.Speed,
-                entity
-              );
+            const input = {
+              vector_in: [vector.x, vector.y],
+              speed_in: speedValue.value,
+            };
 
-              const input = {
-                vector_in: [vector.x, vector.y],
-                speed_in: speedValue.value,
-              };
+            const w = await validateWitness(input);
 
-              const w = await validateWitness(input);
-
-              setComponent(phaser.components.Vector, entity, vector);
-              setComponent(phaser.components.Speed, entity, { value: w[0] });
-            }
+            setComponent(phaser.components.Vector, entity, vector);
+            setComponent(phaser.components.Speed, entity, { value: w[0] });
           }
-        }
 
-        console.log(getComponentValue(phaser.components.Highest, entity));
+          setComponent(phaser.components.Highest, entity, { value: list.addresses.length });
+        }
       }
 
 
