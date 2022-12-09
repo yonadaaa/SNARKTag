@@ -12,7 +12,9 @@ template Validate(D, HYPOTENUSE) {
 
     sum[D-1] === HYPOTENUSE * HYPOTENUSE;
     
-    signal output speed_out <== 200000000000000000000000000000000000000000000000000000000000000000000000;
+    // You should be able to combine vectors
+    // You could just add them, now we don't have the speed abstraction
+    signal output speed_out <== speed_in + 100000000000000000000000000000000000000000000000000000000000000000000000;
     signal output vector_out[D] <== vector_in;
 }
 

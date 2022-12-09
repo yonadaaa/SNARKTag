@@ -18,7 +18,6 @@ template Transitions(F, UNITS, D, DECAY, WIDTH) {
     signal speeds[F][UNITS];
     signal its[F];
     
-    // TODO: vectors needs to account for user input
     for (var i=0; i < F; i++) {
         if (i == 0) {
             (positions[i], vectors[i], speeds[i], its[i]) <== Step(UNITS, D, DECAY, WIDTH)(position_in, vector_in, speed_in, it_in);

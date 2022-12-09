@@ -14,7 +14,6 @@ template Step(UNITS, D, DECAY, BASE_HALF_WIDTH) {
     signal output speed_out[UNITS];
     signal output it_out;
      
-    signal speed_temp[UNITS];
     signal potPositions[UNITS][D];
     signal collisions[UNITS][UNITS];
     signal collisionAccum[UNITS][UNITS];
@@ -39,16 +38,9 @@ template Step(UNITS, D, DECAY, BASE_HALF_WIDTH) {
     // Movement phase
     for (var i=0; i < UNITS; i++) {
         HALF_WIDTHS[i] = ((i+2) * BASE_HALF_WIDTH) / 3;
-        MULTIPLIER[i] = UNITS - i;
-
-        var unitSpeed = speed_in[i] * MULTIPLIER[i];
-        var isZero = IsZero()(speed_in[i]);
-        var isNotZero = NOT()(isZero);
-
-        speed_temp[i] <== isNotZero * (speed_in[i] - DECAY);
 
         for (var j=0; j < D; j++) {
-            actual_vector[i][j] <== vector_in[i][j] * unitSpeed;
+            actual_vector[i][j] <== vector_in[i][j] * speed_in[i];
             potPositions[i][j] <== position_in[i][j] + actual_vector[i][j];
         }
     }
@@ -101,8 +93,8 @@ template Step(UNITS, D, DECAY, BASE_HALF_WIDTH) {
 
             muxSpeed[i][j] = Mux1();
             muxSpeed[i][j].s <== isColliding;
-            muxSpeed[i][j].c[0] <== j == 0 ? speed_temp[i] : muxSpeed[i][j-1].out;
-            muxSpeed[i][j].c[1] <== speed_temp[j];
+            muxSpeed[i][j].c[0] <== j == 0 ? speed_in[i] : muxSpeed[i][j-1].out;
+            muxSpeed[i][j].c[1] <== speed_in[j];
 
             speedAccum[i][j] <== muxSpeed[i][j].out;
 
