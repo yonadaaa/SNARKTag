@@ -37,7 +37,7 @@ export function createRateSystem(network: NetworkLayer, phaser: PhaserLayer) {
 
         // Some things are being counted twice here
         if (highest && list) {
-          for (let i = highest.value; i < list.addresses.length; i++) {            
+          for (let i = highest.value; i < list.addresses.length; i++) {
             const vector = {
               x: list.xs[i].toString(),
               y: list.ys[i].toString(),
@@ -88,7 +88,7 @@ export function createRateSystem(network: NetworkLayer, phaser: PhaserLayer) {
           phaser.components.Vector,
           entity
         );
-        
+
         const indexProper = parseInt(indexValue.value.toString());
 
         position_in[indexProper] = [unitValue.x, unitValue.y];

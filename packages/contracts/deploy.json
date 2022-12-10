@@ -2,10 +2,8 @@
   "components": [
     "ListComponent",
     "PositionComponent",
-    "SpeedComponent",
     "VectorComponent",
     "IndexComponent",
-    "ItComponent",
     "OwnerComponent",
     "CreatedComponent",
     "RateComponent",
@@ -31,10 +29,8 @@
         "RateComponent",
         "StartComponent",
         "PositionComponent",
-        "SpeedComponent",
         "VectorComponent",
         "IndexComponent",
-        "ItComponent",
         "OwnerComponent"
       ]
     },
