@@ -111,7 +111,6 @@ export async function createNetworkLayer(config: GameConfig) {
     const input = {
       position_in,
       vector_in,
-      speed_in: ["0", "0", "0"],
       it_in: "0",
     };
 

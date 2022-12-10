@@ -11,9 +11,6 @@ import { NetworkLayer } from "../../network";
 import { PhaserLayer } from "../types";
 import { transitionWitness, validateWitness } from "./zkProving";
 
-// Every tick, check for new events, and apply them.
-// That will stop our async problem.
-// have an index indicating which you've processed.
 export function createRateSystem(network: NetworkLayer, phaser: PhaserLayer) {
   const {
     world,
@@ -29,38 +26,41 @@ export function createRateSystem(network: NetworkLayer, phaser: PhaserLayer) {
       for (const entity of lists) {
         const highest = getComponentValue(phaser.components.Highest, entity);
         const list = getComponentValue(network.components.List, entity);
+        const vectorValue = getComponentValueStrict(
+          phaser.components.Vector,
+          entity
+        );
 
         if (!highest) {
           setComponent(phaser.components.Highest, entity, { value: 0 });
         }
 
+        // Some things are being counted twice here
         if (highest && list) {
-          for (let i = highest.value; i < list.addresses.length; i++) {
+          for (let i = highest.value; i < list.addresses.length; i++) {            
             const vector = {
               x: list.xs[i].toString(),
               y: list.ys[i].toString(),
             };
 
-            const speedValue = getComponentValueStrict(
-              phaser.components.Speed,
-              entity
-            );
-
             const input = {
-              vector_in: [vector.x, vector.y],
-              speed_in: speedValue.value,
+              vector_in: [vectorValue.x, vectorValue.y],
+              thrust_in: [vector.x, vector.y],
             };
 
             const w = await validateWitness(input);
 
-            setComponent(phaser.components.Vector, entity, vector);
-            setComponent(phaser.components.Speed, entity, { value: w[0] });
+            setComponent(phaser.components.Vector, entity, {
+              x: w[0],
+              y: w[1],
+            });
           }
 
-          setComponent(phaser.components.Highest, entity, { value: list.addresses.length });
+          setComponent(phaser.components.Highest, entity, {
+            value: list.addresses.length,
+          });
         }
       }
-
 
       const units = getComponentEntities(phaser.components.Unit);
 
@@ -74,16 +74,10 @@ export function createRateSystem(network: NetworkLayer, phaser: PhaserLayer) {
         ["0", "0"],
         ["0", "0"],
       ];
-      const speed_in = ["0", "0", "0"];
-      let it_in = 0;
 
       for (const entity of units) {
         const indexValue = getComponentValueStrict(
           network.components.Index,
-          entity
-        );
-        const itValue = getComponentValueStrict(
-          phaser.components.ItClient,
           entity
         );
         const unitValue = getComponentValueStrict(
@@ -94,23 +88,14 @@ export function createRateSystem(network: NetworkLayer, phaser: PhaserLayer) {
           phaser.components.Vector,
           entity
         );
-        const speedValue = getComponentValueStrict(
-          phaser.components.Speed,
-          entity
-        );
-
+        
         const indexProper = parseInt(indexValue.value.toString());
 
         position_in[indexProper] = [unitValue.x, unitValue.y];
         vector_in[indexProper] = [vectorValue.x, vectorValue.y];
-        speed_in[indexProper] = speedValue.value;
-
-        if (itValue.value) {
-          it_in = Number(indexValue.value);
-        }
       }
 
-      const input = { position_in, vector_in, speed_in, it_in };
+      const input = { position_in, vector_in };
 
       const w = await transitionWitness(input);
 
@@ -122,8 +107,6 @@ export function createRateSystem(network: NetworkLayer, phaser: PhaserLayer) {
         x: w[i * 2],
         y: w[i * 2 + 1],
       }));
-      const speed_out = [12, 13, 14].map((i) => w[i].toString());
-      const it_out = w[15].toString();
 
       for (const entity of getComponentEntities(phaser.components.Unit)) {
         const index = getComponentValueStrict(network.components.Index, entity);
@@ -131,12 +114,6 @@ export function createRateSystem(network: NetworkLayer, phaser: PhaserLayer) {
 
         setComponent(phaser.components.Unit, entity, position_out[indexParsed]);
         setComponent(phaser.components.Vector, entity, vector_out[indexParsed]);
-        setComponent(phaser.components.Speed, entity, {
-          value: speed_out[indexParsed],
-        });
-        setComponent(phaser.components.ItClient, entity, {
-          value: indexParsed === Number(it_out),
-        });
       }
     });
   });

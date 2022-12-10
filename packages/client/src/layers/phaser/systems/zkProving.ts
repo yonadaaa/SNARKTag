@@ -87,13 +87,14 @@ function createProver<
 type TransitionProofInput = {
   position_in: Array<Array<string>>;
   vector_in: Array<Array<string>>;
-  speed_in: Array<string>;
-  it_in: string;
 };
 export const transitionWitness =
   createWitness<TransitionProofInput>("transition");
 export const transitionsProver =
   createProver<TransitionProofInput>("transitions");
 
-type ValidateProofInput = { speed_in: string; vector_in: Array<string> };
+type ValidateProofInput = {
+  vector_in: Array<string>;
+  thrust_in: Array<string>;
+};
 export const validateWitness = createWitness<ValidateProofInput>("validate");

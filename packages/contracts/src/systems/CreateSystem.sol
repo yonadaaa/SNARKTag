@@ -24,6 +24,8 @@ uint256 constant HYPOTENUSE = 841;
 uint256 constant SPEED = 0;
 uint256 constant PRIME = 21888242871839275222246405745257275088548364400416034343698204186575808495617;
 uint256 constant PRIME_THIRD = PRIME / 3;
+uint256 constant ORIGIN = 2 ** 31;
+uint256 constant RANGE = 2 ** 32;
 
 contract CreateSystem is System {
   constructor(IWorld _world, address _components) System(_world, _components) {}
@@ -51,17 +53,17 @@ contract CreateSystem is System {
     for (uint256 i; i < UNITS; i++) {
       indexComponent.set(i, i);
       speedComponent.set(i, SPEED);
-      vectorComponent.set(i, Position(HYPOTENUSE, 0));
+      vectorComponent.set(i, Position(0, 0));
 
       if (i == 0) {
         itComponent.set(i, abi.encode(true));
-        positionComponent.set(i, Position(PRIME_THIRD, PRIME_THIRD));
+        positionComponent.set(i, Position(10000, 10000));
       } else if (i == 1) {
         itComponent.set(i, abi.encode(false));
-        positionComponent.set(i, Position(2 * PRIME_THIRD, PRIME_THIRD));
+        positionComponent.set(i, Position(40000, 40000));
       } else {
         itComponent.set(i, abi.encode(false));
-        positionComponent.set(i, Position(PRIME_THIRD, 2 * PRIME_THIRD));
+        positionComponent.set(i, Position(80000, 80000));
       }
     }
   }

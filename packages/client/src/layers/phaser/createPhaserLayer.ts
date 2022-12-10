@@ -14,7 +14,6 @@ import { createRateSystem } from "./systems/createRateSystem";
 import { defineFieldCoordComponent } from "../network/components/FieldCoordComponent";
 import { createDirectionSystem } from "./systems/createDirectionSystem";
 import { createSpeedSystem } from "./systems/createSpeedSystem";
-import { createItSystem } from "./systems/createItSystem";
 
 /**
  * The Phaser layer is responsible for rendering game objects to the screen.
@@ -29,7 +28,6 @@ export async function createPhaserLayer(network: NetworkLayer) {
     Unit: defineFieldCoordComponent(world, { id: "Unit" }),
     Vector: defineFieldCoordComponent(world, { id: "Vector" }),
     Selected: defineBoolComponent(world, { id: "Selected" }),
-    ItClient: defineBoolComponent(world, { id: "ItClient" }),
     Highest: defineNumberComponent(world, { id: "Highest" }),
   };
 
@@ -55,7 +53,6 @@ export async function createPhaserLayer(network: NetworkLayer) {
   createSpeedSystem(network, context);
   createPositionSystem(network, context);
   createDirectionSystem(network, context);
-  createItSystem(network, context);
   createUnitSystem(network, context);
   createInputSystem(network, context);
 
