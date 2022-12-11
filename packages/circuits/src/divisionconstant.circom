@@ -7,13 +7,10 @@ include "../../../node_modules/circomlib/circuits/sign.circom";
 // output: 1 if field element is in (p/2, p-1], 0 otherwise
 template IsNegative() {
     signal input in;
-    signal output out;
 
-    component num2Bits = Num2Bits(254);
-    num2Bits.in <== in;
-    var sign = Sign()(num2Bits.out);
-
-    out <== sign;
+    var num2Bits[254] = Num2Bits(254)(in);
+    
+    signal output out <== Sign()(num2Bits);
 }
 
 // Integer division by a constant.
@@ -21,7 +18,7 @@ template IsNegative() {
 template DivisionConstant(DIVISOR) {
     signal input dividend;
 
-    var is_dividend_negative = IsNegative()(dividend);
+    var is_dividend_negative = dividend < 0;
     var dividend_adjustment = 1 + is_dividend_negative * -2;
     var abs_dividend = dividend * dividend_adjustment;
     var raw_remainder = abs_dividend % DIVISOR;

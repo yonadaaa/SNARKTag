@@ -31,7 +31,7 @@ template Step(UNITS, D, BASE_RADIUS) {
             position_out[i][j] <== position_in[i][j] + vector_in[i][j];
         }
     }
- 
+
     for (var i=0; i < UNITS; i++) {
         // Collision detection phase
         for (var j=0; j < UNITS; j++) {
@@ -45,7 +45,8 @@ template Step(UNITS, D, BASE_RADIUS) {
                     sums[i][j][k] <== (k == 0 ? 0 : sums[i][j][k-1]) + diff * diff;
                 }
 
-                collisions[i][j] <== LessThan(128)([sums[i][j][D-1], MAX_DISTANCE * MAX_DISTANCE]);
+                // Max possible value is D*((2 ** 32) ** 2)
+                collisions[i][j] <== LessThan(65)([sums[i][j][D-1], MAX_DISTANCE * MAX_DISTANCE]);
             } else {
                 collisions[i][j] <== 0;
             }
@@ -58,15 +59,17 @@ template Step(UNITS, D, BASE_RADIUS) {
             } else {
                 var isColliding = i < j ? collisions[i][j] : collisions[j][i];
 
+                // Elastic collision.
+                // From https://en.wikipedia.org/wiki/Elastic_collision#One-dimensional_Newtonian
+                var DIVISOR = MASSES[i] + MASSES[j];
+                var numerator1 = MASSES[i] - MASSES[j];
+                var numerator2 = 2 * MASSES[j];
+                
                 var v[D];
-                 for (var k=0; k < D; k++) {
-                    var DIVISOR = MASSES[i] + MASSES[j];
-                    var numerator1 = MASSES[i] - MASSES[j];
-                    var numerator2 = 2 * MASSES[j];
+                for (var k=0; k < D; k++) {
+                    var (remainder, quotient) = DivisionConstant(DIVISOR)(numerator1 * vector_in[i][k] + numerator2 * vector_in[j][k]);
 
-                    var (r, q) = DivisionConstant(DIVISOR)(numerator1 * vector_in[i][k] + numerator2 * vector_in[j][k]);
-
-                    v[k] = q;
+                    v[k] = quotient;
                 }
 
                 muxVector[i][j] = MultiMux1(D);
@@ -83,8 +86,3 @@ template Step(UNITS, D, BASE_RADIUS) {
         vector_out[i] <== vectorAccum[i][UNITS-1];
     }
 }
-
-
-// Now we know muxVector, loop through and divide each by two
-// They should spin with half the mass
-// var (quotient, remainder) = DivisionConstant(2)(0);
